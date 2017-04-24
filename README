@@ -1,0 +1,5 @@
+compiler 
+g++ -std=c++11 -O3 -DNDEBUG -I ~/include -L ~/lib test1.cpp -o test1 -lsdsl -ldivsufsort -ldivsufsort64
+
+executer 
+./test1
