@@ -24,6 +24,8 @@ class Minima {
 		int taille;
 		int nbBitVector;
 		int sample; 
+		vector<rankv> rankVector;
+		vector<selectv> selectVector;
 
 	public :
 
@@ -81,7 +83,7 @@ class Minima {
 
 		//Création de tous les vector de bit initialiser a 0 et de taille egal a la taille de la sequence
 		for (int i=0; i<nbVector;i++){
-			sampleLevel.push_back(sampleList);
+			//sampleLevel.push_back(sampleList);
 			tab.push_back(b);
 			desc.push_back(true);
 			indiceBitVector.push_back(0);
@@ -303,15 +305,7 @@ class Minima {
 				tab[i].resize(indiceBitVector[i] +1);
 				cout << tab[i] <<"\n"<< endl;
 			}
-		}
-
-					//pour sampleLeve
-
-
-	
-
-	
-		
+		}		
 		
 	}
 
@@ -321,19 +315,20 @@ class Minima {
 
 	copyBitVector(tab,nbVectorFinaux);
 	
-	for (int i =0;i<nbBitVector;i++)
-		cout<<bitVectors[i]<<"\n";
+
 
 		saveNumber(sequence,sampleLevel,tab);
-	for (int i=0; i<sampleLevel.size();i++)
-	cout<<sampleLevel[i]<<"\n";
-	
-	//getMinima(sampleLevel,4,15,0,bitVectors);
-//rank_function(bitVectors[0],8);
+		saveRankVector(bitVectors,rankVector);
+		saveSelectVector(bitVectors,selectVector);
+
 
 	}
 
-
+	/**sauvegarder les sequence de nombre en fonction de sample 
+	int seq[] : la sequence de chiffre initial
+	vector<std::vector<int>> &list : la liste de sequence de chiffre enregistrer
+	vector<bit_vector> &bvt : les vecteur de bit
+	*/
 	void saveNumber(int seq[],std::vector<std::vector<int>> &list,std::vector<bit_vector> &bvt){
 		
 		int cpt=sample;
@@ -370,6 +365,42 @@ class Minima {
 		}
 	}
 
+	void saveRankVector(std::vector<bv> &bvt,vector<rankv> &rankVec){
+		for(int i=0;i<bvt.size();i++){
+		
+				rankv rank(&bvt[i]);
+				rankVec.push_back(rank);
+			
+		
+		}
+	}
+
+	vector<rankv> getRankVector(){
+		return rankVector;
+	}
+
+	int rank_test(bv v,int i){
+			//rank_support_v<1> r(&b);
+			//cout<<r(i);
+			return v(i);
+	}
+
+
+	void saveSelectVector(std::vector<bv> &bvt,vector<selectv> &selectVec) {
+		for(int i=0;i<bvt.size();i++){
+	
+				selectv b_sel(&bvt[i]);
+				selectVec.push_back(b_sel);
+		}
+
+	}
+
+
+	vector<selectv> getSelectVector(){
+		return selectVector;
+	}
+
+
 
 
 
@@ -394,30 +425,97 @@ class Minima {
 		return bitVectors;
 	}
 
-	std::vector<std::vector<int>>  getSampleLevel(){
+	vector<vector<int>>  getSampleLevel(){
 		return sampleLevel;
 	}
 
-	int getMinima(vector<vector<int>> seq,int deb,int fin,int k,vector<bit_vector> bvt) {
+	std::vector<int> getSampleLevel1(int i){
+		return sampleLevel[i];
+	}
 
 
-		if(rank_function(bvt[k],deb)>=rank_function(bvt[k],max(fin-1,0)))
-			return 100;
+		int getMinima1(vector<vector<int>> seq,int deb,int fin,int k,vector<selectv> selectVtr,vector<rankv> rankVtr) {
 
 		
-		return min(min(seq[k][deb],seq[k][fin]),getMinima(seq,rank_function(bvt[k],deb),(rank_function(bvt[k],fin-1)-1),k+1,bvt));
+			int kbis=k;
+
+		//si on a pas la sequence de sample level
+		if (kbis%sample!=0 && sample!=1 ){
+
+			cout<<"sample if\n";
+			int min1,min2;
+			int iddeb,idfin;
+			int debbis=deb;
+			int finbis=fin;
+			while (kbis%sample!=0){
+				kbis--;
+				iddeb=selectVtr[kbis](debbis+1);
+				idfin=selectVtr[kbis](finbis+1);
+				debbis=iddeb;
+				finbis=idfin;
+			
+				if (kbis%sample==0){
+					min1= seq[kbis/sample][iddeb];
+					min2= seq[kbis/sample][idfin];
+
+				}
+			}
+			if (rankVtr[k](deb+1)>=rankVtr[k](max(fin,0)) ){
+
+				return min(min1,min2);
+			}
+			else{
+					return min(min(min1,min2),getMinima1(seq,rankVtr[k](deb+1),(rankVtr[k](fin)-1),k+1,selectVtr,rankVtr));
+						
+				}
+		
+		}
+		//sinon
+		else{
+
+			
+	
+				cout<<"sample else\n";
+
+			if (rankVtr[k](deb+1)>=rankVtr[k](max(fin,0)) ){
+				cout<<"valeure de k if :"<<k<<"\n";
+				cout<<"valeur rank deb"<<rankVtr[k](deb+1)<<"\n";
+				cout<<"valeur rank fin"<<(rankVtr[k](fin)-1)<<"\n";
+				return min(seq[k/sample][deb],seq[k/sample][fin]);
+			}
+			else{
+				cout<<"valeure de k else :"<<k<<"\n";
+					cout<<"valeur rank deb"<<rankVector[k](deb+1)<<"\n";
+					cout<<"valeur rank fin"<<(rankVector[k](fin)-1)<<"\n";
+			return min(min(seq[k/sample][deb],seq[k/sample][fin]),getMinima1(seq,rankVtr[k](deb+1),(rankVtr[k](fin)-1),k+1,selectVtr,rankVtr));
+			}
+		
+		}
 
 
 	}
 
+	int testfunction(vector<vector<int>> seq,int deb){
+		//if (deb==0)
+			return seq[0][deb];
 
-/**
-	int* getSequence(){
-		return sequence;
+		//return testfunction(seq,deb-1);
 	}
-*/
+
+
 	string getSparce(){
 		return sparce;
+	}
+
+	void printBitVector(){
+		for (int i =0;bitVectors.size();i++)
+					cout<<bitVectors[i]<<"\n";
+	}
+
+	void printSampleLevel(){
+
+				for(int i=0;i<sampleLevel.size();i++)
+					cout<<sampleLevel[i]<<"\n";
 	}
 
 	void copieSequence(int seq[],int seq2[],int taille){
@@ -445,41 +543,9 @@ class Minima {
 
 
 
-	int rank_function(bit_vector &b,int i){
-			rank_support_v<1> r(&b);
-			cout<<r(i);
-			return r(i);
-	
-	
-	}
-
-
-
-
-	int rank_function1(bv b,int i){
-		if (mode=="bb"){
-			rank_support_v<1> r(&b);
-			cout<<r(i);
-			return r(i);
-		}
-		if (mode=="s"){
-			sd_vector<> sdb(b);
-			sd_vector<>::rank_1_type r(&sdb);
-			cout<<r(i);
-			return r(i);
-		}
-		if(mode=="r"){
-			rrr_vector<> rrrb(b);
-			rrr_vector<>::rank_1_type r(&rrrb);
-				cout<<r(i);
-			return r(i);
-		}
-		
-		return 0;
-	}
-
-
 
 
 };
+
+
 

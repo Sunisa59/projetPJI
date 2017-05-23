@@ -3,22 +3,22 @@
 int main(int argc, char const *argv[])
 {
 
-	int sequencee[18];
-	sequencee[0] = 6;
-	sequencee[1] = 9;
-	sequencee[2] = 10;
-	sequencee[3] = 9;
-	sequencee[4] = 11;
-	sequencee[5] = 8;
-	sequencee[6] = 7;
-	sequencee[7] = 12;
-	sequencee[8] = 8;
-	sequencee[9] = 13;
-	sequencee[10] = 3;
-	sequencee[11] = 8;
-	sequencee[12] = 7;
+	int sequenceee[18];
+	sequenceee[0] = 6;
+	sequenceee[1] = 9;
+	sequenceee[2] = 10;
+	sequenceee[3] = 9;
+	sequenceee[4] = 11;
+	sequenceee[5] = 8;
+	sequenceee[6] = 7;
+	sequenceee[7] = 12;
+	sequenceee[8] = 8;
+	sequenceee[9] = 13;
+	sequenceee[10] = 3;
+	sequenceee[11] = 8;
+	sequenceee[12] = 7;
 
-	int taille = sizeof(sequencee)/sizeof(int);
+	int taille = sizeof(sequenceee)/sizeof(int);
 
 	string option;
 
@@ -30,17 +30,28 @@ int main(int argc, char const *argv[])
 			cin>>option;
 			if (option =="r"){
 				optionValide=true;
-				Minima<rrr_vector<>,int,int> m(13,sequencee,"r",true,1);
+				Minima<rrr_vector<>,int,int> m(13,sequenceee,"r",true,1);
 				
 					
 			}
 			if (option =="s"){
 				optionValide=true;
-				Minima<sd_vector<>,int,int> m(taille,sequencee,"s",true,2);
+				Minima<sd_vector<>,int,int> m(taille,sequenceee,"s",true,2);
 			}
 			if (option =="b"){
 				optionValide=true;
-				Minima<bit_vector,int,int> m(taille,sequencee,"b",true,2);
+				Minima<bit_vector,int,int> m(13,sequenceee,"b",true,2);
+
+				for(int i=0;i<m.getSampleLevel().size();i++)
+					cout<<m.getSampleLevel()[i]<<"\n";
+
+
+
+				for (int i =0;i<m.getBitVectors().size();i++)
+					cout<<m.getBitVectors()[i]<<"\n";
+
+				int i =m.getMinima1(m.getSampleLevel(),0,12,0,m.getBitVectors());
+				cout<< "res minima : "<<i<<"\n";
 
 			}
 

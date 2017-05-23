@@ -35,39 +35,67 @@ int main(int argc, char const *argv[])
 			cin>>option;
 			if (option =="r"){
 				optionValide=true;
-				Minima<rrr_vector<>,int,int> m(taille,sequencee,"r",true,1);
+				Minima<rrr_vector<>,rrr_vector<>::rank_1_type,rrr_vector<>::select_1_type> m(taille,sequencee,"r",true,1);
 		
 				rrr_vector<> b = m.getBitVectors()[0];//{1,1,0,1,0,0,1};
 				//rrr_vector<>::rank_1_type r(&b);
 				//cout<<"rank rrr :"<<r(6);
+
+				cout<<"test rank save"<<m.getRankVector()[0](5);
 				//m.rank_function(b,3);
-				
+				int i =m.getMinima1(m.getSampleLevel(),5,9,0,m.getSelectVector(),m.getRankVector());
+				cout<< "res minima : "<<i<<"\n";
 					
 			}
 			if (option =="s"){
 				optionValide=true;
-				Minima<sd_vector<>,int,int> m(taille,sequencee,"s",true,2);
+				Minima<sd_vector<>,sd_vector<>::rank_1_type,sd_vector<>::select_1_type> m(taille,sequencee,"s",true,1);
+			int i =m.getMinima1(m.getSampleLevel(),5,9,0,m.getSelectVector(),m.getRankVector());
+				cout<< "res minima : "<<i<<"\n";
+
 			}
 			if (option =="b"){
 				optionValide=true;
-				Minima<bit_vector,rank_support_v<1>,int> m(taille,sequencee,"b",true,1);
+				Minima<bit_vector,rank_support_v<1>,bit_vector::select_1_type> m(taille,sequencee,"b",true,1);
 				//bit_vector b = m.getBitVectors()[0];//{1,1,0,1,0,0,1};
 				//m.rank_function(b,5);
 
-				for (int i =0;i<m.getBitVectors().size();i++)
-					cout<<m.getBitVectors()[i]<<"\n";
+
+cout<< "test function 1="<<m.getSampleLevel().size()<<"\n";
+
+
+cout<< "test function 10="<<m.getBitVectors().size()<<"\n";
+				
+
 
 				for(int i=0;i<m.getSampleLevel().size();i++)
 					cout<<m.getSampleLevel()[i]<<"\n";
 
-				int i =m.getMinima(m.getSampleLevel(),4,15,0,m.getBitVectors());
-				cout<< "res minima : "<<i;
+
+
+				for (int i =0;i<m.getBitVectors().size();i++)
+					cout<<m.getBitVectors()[i]<<"\n";
+
+				cout<< "size bit vec : "<<m.getBitVectors().size()<<"\n";
+				cout<< "size list seq : "<<m.getSampleLevel().size()<<"\n";
+
+				
+				int i =m.getMinima1(m.getSampleLevel(),5,9,0,m.getSelectVector(),m.getRankVector());
+				cout<< "res minima : "<<i<<"\n";
+
+			cout<<"test rank save"<<m.getRankVector()[0](5);
+
+
+
+				
 			}
+			cout<< "test division"<<10%6;
+
 
 			if(!optionValide)
 				cout<<"option incorect \n";
 
-			cout<<min(1,2);
+	
 
 
 		}
